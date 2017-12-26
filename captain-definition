@@ -1,0 +1,17 @@
+{
+ "schemaVersion" :1 ,
+ "dockerfileLines" :[
+                       "FROM debian:stretch",
+                       "RUN useradd meteor -G staff -m -s /bin/bash",
+                       "WORKDIR /home/meteor",
+                       "RUN apt-get update && apt-get install -y git curl bzip2 gnupg libcap2-bin && (curl https://deb.nodesource.com/setup_4.x | bash) && apt-get install -y nodejs jq && apt-get clean && rm -Rf /var/lib/apt/lists/* /tmp/* /var/tmp/*",
+                       "RUN npm install -g semver",
+                       "COPY ./src/entrypoint.sh /usr/bin/entrypoint.sh",
+                       "RUN chmod +x /usr/bin/entrypoint.sh",
+                       "COPY ./src/known_hosts .ssh/known_hosts",
+                       "RUN chown -R meteor:meteor .ssh /usr/bin/entrypoint.sh",
+                       "EXPOSE 3030",
+                       "ENTRYPOINT [\"su\", \"-c\", \"/usr/bin/entrypoint.sh\", \"meteor\"]",
+                       "CMD []"
+                    ]
+}
